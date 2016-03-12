@@ -7,3 +7,5 @@ A happy peer-to-peer filesharing application made just for you.
 - [ ] Decide if it's a Chrome extension or Chrome App
 - [ ] Build what was decided
 - [ ] Deploy :D
+
+[![forthebadge](http://forthebadge.com/images/badges/made-with-crayons.svg)](http://forthebadge.com)
