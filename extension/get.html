@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<!--  <script src="https://cdn.jsdelivr.net/webtorrent/latest/webtorrent.min.js"></script> -->
+	<script src="static/jquery-1.12.1.js"></script>
+	<script src="static/webtorrent.min.js"></script>
+	<script type="text/javascript">
+		var alevel = ""
+		var server = "http://415b1a40.ngrok.com"
+
+		window.onload = function() {
+			alevel = window.location.hash
+			onUpload(alevel)
+		}
+		var file
+		function onUpload(alevel) {
+
+			$.ajax({
+				url: server + '/magnet',
+				processData: true,
+				type: "POST",
+				async: true,
+				mimeType: "application/json",
+				cache: false,
+				data: {"hash": alevel.slice(1)},
+				success: function(data, textStatus, jqXHR) {
+					console.log(data);
+					var magnet = data["magnet"]
+					console.log(magnet)
+					downloadTorrent(magnet)
+				}
+			})
+
+			// make alevel the magnet
+			// var xhr = new XMLHttpRequest();
+
+			// xhr.open("POST", server + '/magnet', true);
+			// xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+			// xhr.onreadystatechange = function() {
+			// 	if (xhr.readyState == 4) {
+			// 		console.log(xhr.responseText)
+			// 		str = xhr.responseText
+			// 		var responseData = JSON.parse(str)
+			// 		var magnet = responseData["magnet"]
+			// 		downloadTorrent(magnet)
+			// 	}
+			// }
+			// // Sending without the first character which is a hash
+			// xhr.send("hash=" + alevel.slice(1))
+		}
+
+		function downloadTorrent(magnet) {
+			var client = new WebTorrent()
+			console.log("hi")
+			client.add(magnet, function(torrent) {
+				file = torrent.files[0]
+				console.log("yay")
+				var reader = new FileReader()
+
+				// reader.readAsDataURL(file);
+
+				console.log(file.length)
+				console.log(file.result)
+				var objectURL = file.getBlobURL(function(err, url) {
+					document.getElementById("link").setAttribute("href", url)
+				});
+			})
+		}
+	</script>
+</head>
+<body>
+	<a href="" id="link">YAY :D</a>
+	
+</body>
+</html>
