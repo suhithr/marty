@@ -2,7 +2,8 @@ onconnect = function(e) {
 	var port = e.ports[0];
 
 	port.onmessage = function(e) {
-	  port.postMessage(e.data);
+		port.postMessage(e.data);
+		console.log("at worker")
 	}
 
 }

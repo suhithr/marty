@@ -11,12 +11,15 @@ function onUpload(files) {
 	var file = files[0]
 	
 	port.postMessage({type: "file"})
-	if (!!worker)
-		var worker = new SharedWorker('worker.js')
+	var worker
+	if (!!worker || worker == undefined) {
+		worker = new SharedWorker('worker.js')
+		console.log()
+	}
 	worker.port.addEventListener("message", onWorkerMessage, false)
 	worker.port.start()
 
-	worker.postMessage(file)
+	worker.port.postMessage(file)
 }
 
 $('#file').change( function() {

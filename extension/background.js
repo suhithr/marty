@@ -1,7 +1,8 @@
 var server = ""
 // An external port object for using outside the onConnect function
-var clonePort = new Port()
+var clonePort
 var portName = "channel"
+setupWorker()
 
 
 // Listens for the connect() call in popup.js
@@ -12,7 +13,6 @@ chrome.runtime.onConnect.addListener( function (port) {
 		// Cloning the port object for use outside this function
 		clonePort = $.extend(true, {}, port)
 
-		console.log(msg.meet)
 		port.postMessage({reply: "Marty to Marty"})
 
 		// Listener for when a file is sent
@@ -28,15 +28,17 @@ chrome.runtime.onConnect.addListener( function (port) {
 })
 
 function setupWorker() {
-	if (!!worker)
-			var worker = new SharedWorker('worker.js')
+	console.log("setupWorker")
+	var worker
+	if (!!window.worker || worker == undefined)
+		worker = new SharedWorker('worker.js')
 	worker.port.addEventListener("message", onWorkerMessage, false)
 	worker.port.start()
 }
 
 function onWorkerMessage(evt) {
 	var file = evt.data
-
+	console.log("received file : " + file)
 	if (!!client)
 		var client = new WebTorrent()
 	client.seed(file, function(torrent) {
@@ -57,6 +59,7 @@ function onWorkerMessage(evt) {
 				if (clonePort.name == portName) {
 					// We will send the dataURL to popup.js
 					// If doesn't work we will send the file via SharedWorker
+					console.log("sending hash")
 					clonePort.postMessage({hash: data["hash"]})
 				}
 			}
@@ -86,9 +89,10 @@ function getMagnet(hash) {
 }
 
 function downloadFile(magnet) {
+	var client
 	// If client has not been previously created
-	if (!!client)
-		var client = new WebTorrent()
+	if (!!client || client == undefined)
+		client = new WebTorrent()
 
 	client.add(magnet, function(torrent) {
 		// We will assume the torrent only contains the first file and take it
