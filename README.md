@@ -28,3 +28,4 @@ A happy peer-to-peer filesharing application made just for you.
 * hash -> user-entered hash_url
 
 ######Background -> Popup
+* { BlobURL: `dataURL`}
