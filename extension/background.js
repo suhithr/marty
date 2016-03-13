@@ -4,8 +4,58 @@ var portName = "channel"
 
 var popupPage
 
+/*
+	Check if enable-panel flag is on
+	If not, display alert and open chrome://flags#enable-panels
+	Else Open Marty as a Panel :D
+*/
 
+/*
+	To check if panels are enabled refer: http://stackoverflow.com/a/13631643/4219775
+*/
 
+var _isPanelEnabled
+var _isPanelEnabledQueue = []
+function getPanelFlagState(callback) {
+    if (typeof callback != 'function') throw Error('callback function required')
+    if (typeof _isPanelEnabled == 'boolean') {
+        callback(_isPanelEnabled) // Use cached result
+        return
+    }
+    _isPanelEnabledQueue.push(callback)
+
+    if (_isPanelEnabled == 'checking')
+        return
+
+    _isPanelEnabled = 'checking'
+    chrome.windows.create({
+        url: 'about:blank',
+        type: 'panel'
+    }, function(windowInfo) {
+        _isPanelEnabled = windowInfo.alwaysOnTop
+        chrome.windows.remove(windowInfo.id)
+
+        // Handle all queued callbacks
+        while (callback = _isPanelEnabledQueue.shift()) {
+            callback(windowInfo.alwaysOnTop)
+        }
+    })
+}
+
+// Usage:
+getPanelFlagState(function(isEnabled){})
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+	if (_isPanelEnabled) {
+    	chrome.windows.create({ url: "popup.html", type:"panel" })
+	}
+    else {
+    	chrome.windows.create({ url: "chrome://flags#enable-panels", type:"popup" })
+    	alert('Select Enabled from the dropdown under "Panels"')
+    }
+})
+
+// upload and download torrents
 window.addEventListener("message", receiveMessage, false)
 
 function receiveMessage(evt) {
@@ -31,9 +81,9 @@ function uploadFile(file) {
 			cache: false,
 			data: {"uri": torrent.magnetURI},
 			success: function(data, textStatus, jqXHR) {
-				console.log(data);
+				console.log(data)
 
-				popupPage = chrome.extension.getViews({type: 'popup'})[0];
+				popupPage = chrome.extension.getViews({type: 'popup'})[0]
 				console.log(popupPage)
 				// Send data to popup
 				popupPage.postMessage( {link: data["hash"]}, "*")
@@ -56,7 +106,7 @@ function getMagnet(link) {
 		data: {"hash": link},
 		success: function(data, textStatus, jqXHR) {
 			console.log(data)
-			var magnet = data["magnet"];
+			var magnet = data["magnet"]
 			console.log(magnet)
 			downloadFile(magnet)
 		},
@@ -76,7 +126,7 @@ function downloadFile(magnet) {
 		var fileURL = file.getBlobURL( function(err, url) {
 			if (err) throw err
 
-			popupPage = chrome.extension.getViews({type: 'popup'})[0];
+			popupPage = chrome.extension.getViews({type: 'popup'})[0]
 			popupPage.postMessage({BlobURL: url}, "*")
 
 		})
