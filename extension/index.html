@@ -17,8 +17,6 @@
 				console.log("YAY Seeding " + torrent.infoHash)
 				console.log("YAY Magnet URI " + torrent.magnetURI)
 
-				var xhr = new XMLHttpRequest();
-
 				$.ajax({
 					url: server + '/url',
 					processData: true,

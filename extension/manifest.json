@@ -1,0 +1,21 @@
+{
+	"manifest_version": 2,
+
+	"name": "marty",
+	"description": "Happy Sharing App",
+	"version": "1.0",
+	// If we add "persistent": false to "background" then we get and event page which is only loaded when needed and otherwise goes idle again freeing up memory and resources
+	"background": {
+		"scripts": ["static/jquery-1.12.1.js", "static/webtorrent.min.js", "background.js"]
+	},
+	"browser_action": {
+		"default_title": "marty",
+		"default_popup": "popup.html"
+	},
+
+	"permissions": [
+		"http://*.ngrok.com/"
+	],
+
+	"author": "Suhith Rajesh and Prajwal Renukanand"
+}
