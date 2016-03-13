@@ -16,10 +16,17 @@ function onUpload(files) {
 	})
 }
 
+function processHashUrl(event) {
+	if(event.data.hash != undefined) {
+		console.log(event.data.hash)
+		$('#hash').text(event.data.hash)
+	}
+}	
+
 $('#file').change( function() {
     onUpload(this.files)
 })
 
-function onWorkerMessage(evt){
-   console.log("Message received from the worker: " + evt.data)
-}
+window.addEventListener("message", processHashUrl, false)
+
+

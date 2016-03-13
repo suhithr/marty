@@ -21,9 +21,9 @@ chrome.runtime.onConnect.addListener( function (port) {
 })
 
 
-window.addEventListener("message", onWorkerMessage, false)
+window.addEventListener("message", uploadFile, false)
 
-function onWorkerMessage(evt) {
+function uploadFile(evt) {
 	var file = evt.data
 	console.log("received file : " + file)
 	if (!!client || client == undefined)
