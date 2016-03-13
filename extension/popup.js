@@ -19,7 +19,7 @@ function onUpload(files) {
 	worker.port.addEventListener("message", onWorkerMessage, false)
 	worker.port.start()
 
-	worker.port.postMessage(file)
+	worker.port.postMessage('abc')
 }
 
 $('#file').change( function() {
