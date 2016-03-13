@@ -10,11 +10,22 @@ A happy peer-to-peer filesharing application made just for you.
 
 [![forthebadge](http://forthebadge.com/images/badges/made-with-crayons.svg)](http://forthebadge.com)
 
-######Todo
-#######Build Chrome extension
+#####Todo
+
+######Build Chrome extension
 - [X] Basic architecture of extension written
 - [ ] Set background scripts as what we've written
 - [ ] Create simple frontends
 - [ ] Pass data from frontend to background
 - [ ] Run tests to see if it works as before
-- [ ]
+
+
+######Messaging
+
+######Popup -> Background
+`{ type: "", data: ""}`
+* file -> `stringified file data`
+* hash -> user-entered hash_url
+
+######Background -> Popup
+* { BlobURL: `dataURL`}
