@@ -18,6 +18,7 @@ chrome.runtime.onConnect.addListener( function (port) {
 		// Listener for when a file is sent
 		if (msg.type == "file") {
 			// We recieve the file which has been encoded as a JSON string and we must re-encode it into a file object and send to webtorrent
+			setupWorker()
 		}
 		else if (msg.type == "hash") {
 			var hash = msg.data
@@ -25,6 +26,44 @@ chrome.runtime.onConnect.addListener( function (port) {
 		}
 	})
 })
+
+function setupWorker() {
+	if (!!worker)
+			var worker = new SharedWorker('worker.js')
+	worker.port.addEventListener("message", onWorkerMessage, false)
+	worker.port.start()
+}
+
+function onWorkerMessage(evt) {
+	var file = evt.data
+
+	if (!!client)
+		var client = new WebTorrent()
+	client.seed(file, function(torrent) {
+
+		$.ajax({
+			url: server + '/url',
+			processData: true,
+			type: "POST",
+			async: true,
+			mimeType: "application/json",
+			cache: false,
+			data: {"uri": torrent.magnetURI},
+			success: function(data, textStatus, jqXHR) {
+				console.log(data);
+				// Send the hash to popup.js
+				// If the clonePort has been correctly cloned
+				// Else we must try shared worker or setting up a new connection with a diff name
+				if (clonePort.name == portName) {
+					// We will send the dataURL to popup.js
+					// If doesn't work we will send the file via SharedWorker
+					clonePort.postMessage({hash: data["hash"]})
+				}
+			}
+		})
+
+	})
+}
 
 // Fetches the magnet link from the server and calls download function
 function getMagnet(hash) {
@@ -48,7 +87,7 @@ function getMagnet(hash) {
 
 function downloadFile(magnet) {
 	// If client has not been previously created
-	if (client == undefined)
+	if (!!client)
 		var client = new WebTorrent()
 
 	client.add(magnet, function(torrent) {
