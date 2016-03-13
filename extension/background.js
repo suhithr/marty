@@ -2,7 +2,7 @@ var server = "http://415b1a40.ngrok.com"
 
 var portName = "channel"
 
-var popupPage = chrome.extension.getViews( {ViewType: 'popup'} )[0];
+var popupPage
 
 
 
@@ -33,8 +33,10 @@ function uploadFile(file) {
 			success: function(data, textStatus, jqXHR) {
 				console.log(data);
 
+				popupPage = chrome.extension.getViews({type: 'popup'})[0];
+				console.log(popupPage)
 				// Send data to popup
-				popupPage.postMessage( {link: data["hash"]} )
+				popupPage.postMessage( {link: data["hash"]}, "*")
 			}
 		})
 
@@ -63,6 +65,7 @@ function getMagnet(link) {
 
 function downloadFile(magnet) {
 	var client
+	console.log("downloading")
 	// If client has not been previously created
 	if (!!client || client == undefined)
 		client = new WebTorrent()
@@ -73,7 +76,8 @@ function downloadFile(magnet) {
 		var fileURL = file.getBlobURL( function(err, url) {
 			if (err) throw err
 
-			popupPage.postMessage({BlobURL: url})
+			popupPage = chrome.extension.getViews({type: 'popup'})[0];
+			popupPage.postMessage({BlobURL: url}, "*")
 
 		})
 	})

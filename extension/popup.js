@@ -1,7 +1,7 @@
 window.addEventListener("message", readFromBackground, false)
 
 
-$('#file_input_file').change( function() {
+$('#file').change( function() {
     onUpload(this.files)
 })
 
@@ -16,7 +16,7 @@ linkInput.addEventListener("keydown", function (e) {
 // Send a message with type file to trigger activation of shared worker in background
 function onUpload(files) {
 	var file = files[0]
-	
+	console.log("sending to background")
 	// Sending the file to background
 	sendToBackground(file)
 }
@@ -27,12 +27,12 @@ function processHashUrl(link) {
 }
 
 function processBlobURL(url) {
+	console.log("Modding the DOM")
 	document.getElementById("download").setAttribute("href", url)
-	document.getElementById("download").style.display = "inline"
 }
 
 function readFromBackground(evt) {
-	if (evt.data.hash != undefined)
+	if (evt.data.link != undefined)
 		processHashUrl(evt.data.link)
 	if (evt.data.BlobURL != undefined)
 		processBlobURL(evt.data.BlobURL)
