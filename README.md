@@ -4,28 +4,29 @@ A happy peer-to-peer filesharing application made just for you.
 
 #####Project Roadmap
 - [X] Make a web version for the file sharing
-- [X] Decide if it's a Chrome extension or Chrome App (Decided on Chrome Extension)
-- [ ] Build what was decided
+- [ ] Build Chrome Extension
 - [ ] Deploy :D
 
 [![forthebadge](http://forthebadge.com/images/badges/made-with-crayons.svg)](http://forthebadge.com)
 
-#####Todo
+####Todo
 
 ######Build Chrome extension
 - [X] Basic architecture of extension written
-- [ ] Set background scripts as what we've written
-- [ ] Create simple frontends
-- [ ] Pass data from frontend to background
-- [ ] Run tests to see if it works as before
+- [X] Set background scripts as what we've written
+- [X] Create simple frontends
+- [X] Pass data from frontend to background and vice-versa
+- [ ] Allow to seed files
+- [ ] Allow to download torrents
+- [ ] Maintain state between closing and opening of popup window
 
 
-######Messaging
+#####Messaging
 
 ######Popup -> Background
-`{ type: "", data: ""}`
-* file -> `stringified file data`
-* hash -> user-entered hash_url
+* { link: `link from input`}
+* {`File Object`}
 
 ######Background -> Popup
+* { hash: `link from server`}
 * { BlobURL: `dataURL`}

@@ -5,26 +5,18 @@ var portName = "channel"
 var popupPage = chrome.extension.getViews( {ViewType: 'popup'} )[0];
 
 
-// Listens for the connect() call in popup.js
-chrome.runtime.onConnect.addListener( function (port) {
-	console.log("Port name : " + port.name)
 
-	port.onMessage.addListener( function(msg) {
+window.addEventListener("message", receiveMessage, false)
 
-		port.postMessage({reply: "Marty to Marty"})
+function receiveMessage(evt) {
+	if (evt.data.link == undefined)
+		uploadFile(evt.data)
+	else
+		getMagnet(evt.data.link)
+}
 
-		if (msg.type == "hash") {
-			var hash = msg.data
-			getMagnet(hash)
-		}
-	})
-})
+function uploadFile(file) {
 
-
-window.addEventListener("message", uploadFile, false)
-
-function uploadFile(evt) {
-	var file = evt.data
 	console.log("received file : " + file)
 	if (!!client || client == undefined)
 		var client = new WebTorrent()
@@ -42,7 +34,7 @@ function uploadFile(evt) {
 				console.log(data);
 
 				// Send data to popup
-				popupPage.postMessage( {hash: data["hash"]} )
+				popupPage.postMessage( {link: data["hash"]} )
 			}
 		})
 
@@ -50,7 +42,7 @@ function uploadFile(evt) {
 }
 
 // Fetches the magnet link from the server and calls download function
-function getMagnet(hash) {
+function getMagnet(link) {
 	// Get magnet URL from server
 	$.ajax({
 		url: server + '/magnet',
@@ -59,7 +51,7 @@ function getMagnet(hash) {
 		async: true,
 		mimeType: "application/json",
 		cache: false,
-		data: {"hash": hash},
+		data: {"hash": link},
 		success: function(data, textStatus, jqXHR) {
 			console.log(data)
 			var magnet = data["magnet"];
