@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 <html >
-  <head>
-    <meta charset="UTF-8">
-    <title>Marty</title>
-     
-    <link rel="stylesheet" href="static/css/reset.css">
-    <link rel="stylesheet" href="static/css/style.css">
-    <link rel="stylesheet" href="static/css/font-awesome.min.css">
-    <link rel='stylesheet' href='static/css/font.css' type='text/css'>
-    <script src="static/jquery-1.12.1.js"></script>
-  </head>
+<head>
+	<meta charset="UTF-8">
+	<title>Marty</title>
+	 
+	<link rel="stylesheet" href="static/css/reset.css">
+	<link rel="stylesheet" href="static/css/style.css">
+	<link rel="stylesheet" href="static/css/font-awesome.min.css">
+	<link rel='stylesheet' href='static/css/font.css' type='text/css'>
+	<script src="static/jquery-1.12.1.js"></script>
+</head>
 
- <body>
+<body>
 
-    <h1>Marty</h1>
+	<h1>Marty</h1>
 	<div class="tab-wrap">
-  
-    <input type="radio" name="tabs" id="tab1" checked>
-    <div class="tab-label-content" id="tab1-content">
-      <label for="tab1">Upload</label>
-     <div class="tab-content">
-     	<input type="file" id="file"></input>
-     </div>
-    </div>
-    
-    <input type="radio" name="tabs" id="tab2">
-    <div class="tab-label-content" id="tab2-content">
-      <label for="tab2">Download</label>
-    </div>
-    <div class="slide"></div>
-  
+
+	<input type="radio" name="tabs" id="tab1" checked>
+	<div class="tab-label-content" id="tab1-content">
+	 	<label for="tab1">Upload</label>
+		<div class="tab-content">
+			<input type="file" id="file"></input>
+			<br>
+			<br>
+			<div id="hash">
+			</div>
+		</div>
+	</div>
+
+	<input type="radio" name="tabs" id="tab2">
+	<div class="tab-label-content" id="tab2-content">
+		<label for="tab2">Download</label>
+	</div>
+	<div class="slide"></div>
+
 </div>
-    <script src="popup.js"></script>
-  </body> 
+<script src="popup.js"></script>
+</body> 
 </html>

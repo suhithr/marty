@@ -1,8 +1,8 @@
-var server = ""
-// An external port object for using outside the onConnect function
-var clonePort
+var server = "http://415b1a40.ngrok.com"
+
 var portName = "channel"
 
+var popupPage = chrome.extension.getViews( {ViewType: 'popup'} )[0];
 
 
 // Listens for the connect() call in popup.js
@@ -10,8 +10,6 @@ chrome.runtime.onConnect.addListener( function (port) {
 	console.log("Port name : " + port.name)
 
 	port.onMessage.addListener( function(msg) {
-		// Cloning the port object for use outside this function
-		clonePort = $.extend(true, {}, port)
 
 		port.postMessage({reply: "Marty to Marty"})
 
@@ -42,15 +40,9 @@ function onWorkerMessage(evt) {
 			data: {"uri": torrent.magnetURI},
 			success: function(data, textStatus, jqXHR) {
 				console.log(data);
-				// Send the hash to popup.js
-				// If the clonePort has been correctly cloned
-				// Else we must try shared worker or setting up a new connection with a diff name
-				if (clonePort.name == portName) {
-					// We will send the dataURL to popup.js
-					// If doesn't work we will send the file via SharedWorker
-					console.log("sending hash")
-					clonePort.postMessage({hash: data["hash"]})
-				}
+
+				// Send data to popup
+				popupPage.postMessage( {hash: data["hash"]} )
 			}
 		})
 
@@ -89,12 +81,8 @@ function downloadFile(magnet) {
 		var fileURL = file.getBlobURL( function(err, url) {
 			if (err) throw err
 
-			// If the clonePort has been correctly cloned 
-			if (clonePort.name == portName) {
-				// We will send the dataURL to popup.js
-				// If doesn't work we will send the file via SharedWorker
-				clonePort.postMessage({BlobURL: url})
-			}
+			popupPage.postMessage({BlobURL: url})
+
 		})
 	})
 }
