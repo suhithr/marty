@@ -10,16 +10,10 @@ port.onMessage.addListener( function(msg) {
 function onUpload(files) {
 	var file = files[0]
 	
-	port.postMessage({type: "file"})
-	var worker
-	if (!!worker || worker == undefined) {
-		worker = new SharedWorker('worker.js')
-		console.log()
-	}
-	worker.port.addEventListener("message", onWorkerMessage, false)
-	worker.port.start()
-
-	worker.port.postMessage('abc')
+	// Sending the file to background
+	chrome.runtime.getBackgroundPage(function (backgroundPage) {
+		backgroundPage.postMessage(file, "*")
+	})
 }
 
 $('#file').change( function() {
@@ -27,5 +21,5 @@ $('#file').change( function() {
 })
 
 function onWorkerMessage(evt){
-   alert("Message received from the worker: " + evt.data)
+   console.log("Message received from the worker: " + evt.data)
 }

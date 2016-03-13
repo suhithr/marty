@@ -2,7 +2,7 @@ var server = ""
 // An external port object for using outside the onConnect function
 var clonePort
 var portName = "channel"
-setupWorker()
+
 
 
 // Listens for the connect() call in popup.js
@@ -15,31 +15,20 @@ chrome.runtime.onConnect.addListener( function (port) {
 
 		port.postMessage({reply: "Marty to Marty"})
 
-		// Listener for when a file is sent
-		if (msg.type == "file") {
-			// We recieve the file which has been encoded as a JSON string and we must re-encode it into a file object and send to webtorrent
-			setupWorker()
-		}
-		else if (msg.type == "hash") {
+		if (msg.type == "hash") {
 			var hash = msg.data
 			getMagnet(hash)
 		}
 	})
 })
 
-function setupWorker() {
-	console.log("setupWorker")
-	var worker
-	if (!!window.worker || worker == undefined)
-		worker = new SharedWorker('worker.js')
-	worker.port.addEventListener("message", onWorkerMessage, false)
-	worker.port.start()
-}
+
+window.addEventListener("message", onWorkerMessage, false)
 
 function onWorkerMessage(evt) {
 	var file = evt.data
 	console.log("received file : " + file)
-	if (!!client)
+	if (!!client || client == undefined)
 		var client = new WebTorrent()
 	client.seed(file, function(torrent) {
 
