@@ -4,9 +4,20 @@ html, body {
   width: 100%;
 }
 
-
 label, p, a, h1, div {
   font-family: Roboto, sans-serif;
+}
+
+#file {
+    text-align: center;
+    width: 300px;
+    padding: 25px;
+    background-color: #00bcd4;
+    border: 5px;
+    border-style: dashed;
+    border-color: #808080;
+    margin: 25px;
+    position:relative;
 }
 
 .tab-wrap {

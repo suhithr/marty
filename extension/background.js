@@ -67,7 +67,6 @@ function receiveMessage(evt) {
 
 function uploadFile(file) {
 
-	console.log("received file : " + file)
 	if (!!client || client == undefined)
 		var client = new WebTorrent()
 	client.seed(file, function(torrent) {
@@ -83,7 +82,7 @@ function uploadFile(file) {
 			success: function(data, textStatus, jqXHR) {
 				console.log(data)
 
-				popupPage = chrome.extension.getViews({type: 'popup'})[0]
+				popupPage = chrome.extension.getViews()[1]
 				console.log(popupPage)
 				// Send data to popup
 				popupPage.postMessage( {link: data["hash"]}, "*")
@@ -126,7 +125,7 @@ function downloadFile(magnet) {
 		var fileURL = file.getBlobURL( function(err, url) {
 			if (err) throw err
 
-			popupPage = chrome.extension.getViews({type: 'popup'})[0]
+			popupPage = chrome.extension.getViews()[1]
 			popupPage.postMessage({BlobURL: url}, "*")
 
 		})
