@@ -4,7 +4,11 @@ var portName = "channel"
 
 var popupPage
 
-
+chrome.browserAction.onClicked.addListener(function(tab) {
+  chrome.tabs.executeScript({
+    code: 'document.body.style.backgroundColor="red"'
+  });
+});
 
 window.addEventListener("message", receiveMessage, false)
 
