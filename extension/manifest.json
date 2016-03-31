@@ -13,12 +13,18 @@
 		"scripts": ["static/jquery-1.12.1.js", "static/webtorrent.min.js", "background.js"]
 	},
 
-	"browser_action": {
-		
-  	},
-
+	"content_scripts": [
+		{
+			"css": ["style.css"],
+			"js": ["static/jquery-1.12.1.js", "injector.js"]
+		}
+	],
+	// tabs permission since when a tab is no longer active we will have to hide the interface
+	// unlimitedStorage permission so that we can store files >5MB on the client side
 	"permissions": [
-		"http://*.ngrok.com/"
+		"http://*.ngrok.com/",
+		"unlimitedStorage",
+		"tabs"
 	],
 
 	"author": "Suhith Rajesh and Prajwal Renukanand"
