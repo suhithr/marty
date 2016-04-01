@@ -6,7 +6,7 @@ import json
 
 
 def randomword(length):
-    return ''.join(random.choice(string.lowercase) for i in range(length))
+    return ''.join(random.choice(string.lowercase + string.digits) for i in range(length))
 
 r = redis.Redis(
     host='127.0.0.1',
@@ -16,7 +16,6 @@ r = redis.Redis(
 class URIMapper:
 
     def on_post(self, req, resp):
-        hash_url = randomword(5)
         uri = req.get_param('uri')
         print uri + " --> " + hash_url
         r.set(hash_url, uri)
@@ -25,6 +24,8 @@ class URIMapper:
         resp.content_type = 'application/json'
         resp.status = falcon.HTTP_200
         resp.set_header('Access-Control-Allow-Origin', '*')
+
+    def getHash(self,)
 
 
 class GetMagnet:

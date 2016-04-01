@@ -5,8 +5,8 @@
 	"description": "Happy Sharing App",
 	"version": "1.0",
 	// If we add "persistent": false to "background" then we get and event page which is only loaded when needed and otherwise goes idle again freeing up memory and resources
-	"permissions": [ "tabs",
-    "https://*/*","http://*/*","activeTab"
+	"permissions": [ 
+    "activeTab","<all_urls>"
   	],
 
 	"background": {
@@ -14,12 +14,16 @@
 	},
 
 	"browser_action": {
-		
-  	},
+	},
 
-	"permissions": [
-		"http://*.ngrok.com/"
-	],
+	"content_scripts": [{
+	      "matches": ["<all_urls>"],
+	      "js": ["inject.js"],
+	      "all_frames": true,
+	      "run_at":"document_idle"
+	   }],
+
+    "web_accessible_resources": ["popup.html"],
 
 	"author": "Suhith Rajesh and Prajwal Renukanand"
 }
