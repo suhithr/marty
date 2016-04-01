@@ -5,27 +5,25 @@
 	"description": "Happy Sharing App",
 	"version": "1.0",
 	// If we add "persistent": false to "background" then we get and event page which is only loaded when needed and otherwise goes idle again freeing up memory and resources
-	"permissions": [ "tabs",
-    "https://*/*","http://*/*","activeTab"
+	"permissions": [ 
+    "activeTab","<all_urls>"
   	],
 
 	"background": {
 		"scripts": ["static/jquery-1.12.1.js", "static/webtorrent.min.js", "background.js"]
 	},
 
-	"content_scripts": [
-		{
-			"css": ["style.css"],
-			"js": ["static/jquery-1.12.1.js", "injector.js"]
-		}
-	],
-	// tabs permission since when a tab is no longer active we will have to hide the interface
-	// unlimitedStorage permission so that we can store files >5MB on the client side
-	"permissions": [
-		"http://*.ngrok.com/",
-		"unlimitedStorage",
-		"tabs"
-	],
+	"browser_action": {
+	},
+
+	"content_scripts": [{
+	      "matches": ["<all_urls>"],
+	      "js": ["inject.js"],
+	      "all_frames": true,
+	      "run_at":"document_idle"
+	   }],
+
+    "web_accessible_resources": ["popup.html"],
 
 	"author": "Suhith Rajesh and Prajwal Renukanand"
 }
